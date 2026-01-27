@@ -72,14 +72,25 @@ public class ShoppingListController {
     public ResponseEntity<ShoppingList> updateListName(
             @PathVariable Long id,
             @RequestBody UpdateListNameRequest request) {
-        ShoppingList list =shoppingListService.getListById(id);
-        if ( list == null) {
+        ShoppingList list = shoppingListService.getListById(id);
+        if (list == null) {
             return ResponseEntity.notFound().build();
         }
 
         list.setName(request.getName());
         ShoppingList updated = shoppingListService.updateList(list);
         return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/lists/{id}")
+    public ResponseEntity<Void> deleteList(@PathVariable Long id) {
+        ShoppingList list = shoppingListService.getListById(id);
+        if (list == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        shoppingListService.deleteList(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/lists/{id}/stats")

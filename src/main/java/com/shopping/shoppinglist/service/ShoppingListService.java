@@ -69,6 +69,11 @@ public class ShoppingListService {
         return shoppingListRepository.save(list);
     }
 
+    public void deleteList(Long id) {
+        // JPA eliminará automáticamente los items relacionados si está configurado CASCADE
+        shoppingListRepository.deleteById(id);
+    }
+
     public Map<String, Integer> getListStats(Long listId) {
         List<ShoppingItem> items = shoppingItemRepository.findByShoppingListId(listId);
         int total = items.size();
