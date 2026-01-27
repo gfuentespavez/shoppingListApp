@@ -27,13 +27,19 @@ public class ShoppingListService {
     @Autowired
     private PDFProcessor pdfProcessor;
     
-    public ShoppingList uploadAndProcessPDF(MultipartFile file) throws IOException {
+    public ShoppingList uploadAndProcessPDF(MultipartFile file, String workspaceCode) throws IOException {
         // Guardar archivo temporalmente
         File tempFile = File.createTempFile("shopping-list", ".pdf");
         file.transferTo(tempFile);
         
         // Procesar PDF
         ShoppingList shoppingList = pdfProcessor.processPDF(tempFile);
+        
+        // Asignar workspace code (o generar uno si no se provee)
+        if (workspaceCode == null || workspaceCode.trim().isEmpty()) {
+            workspaceCode = "DEFAULT";
+        }
+        shoppingList.setWorkspaceCode(workspaceCode);
         
         // Guardar en base de datos
         ShoppingList savedList = shoppingListRepository.save(shoppingList);
@@ -44,8 +50,11 @@ public class ShoppingListService {
         return savedList;
     }
     
-    public List<ShoppingList> getAllLists() {
-        return shoppingListRepository.findAll();
+    public List<ShoppingList> getAllLists(String workspaceCode) {
+        if (workspaceCode == null || workspaceCode.trim().isEmpty()) {
+            workspaceCode = "DEFAULT";
+        }
+        return shoppingListRepository.findByWorkspaceCode(workspaceCode);
     }
     
     public ShoppingList getListById(Long id) {
@@ -70,7 +79,6 @@ public class ShoppingListService {
     }
 
     public void deleteList(Long id) {
-        // JPA eliminará automáticamente los items relacionados si está configurado CASCADE
         shoppingListRepository.deleteById(id);
     }
 

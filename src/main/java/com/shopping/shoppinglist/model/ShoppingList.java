@@ -15,6 +15,9 @@ public class ShoppingList {
 
     private String name;
 
+    @Column(name = "workspace_code")
+    private String workspaceCode;
+
     @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ShoppingItem> items = new ArrayList<>();
@@ -39,6 +42,14 @@ public class ShoppingList {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getWorkspaceCode() {
+        return workspaceCode;
+    }
+
+    public void setWorkspaceCode(String workspaceCode) {
+        this.workspaceCode = workspaceCode;
     }
 
     public List<ShoppingItem> getItems() {

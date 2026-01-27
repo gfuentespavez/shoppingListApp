@@ -20,9 +20,11 @@ public class ShoppingListController {
     private ShoppingListService shoppingListService;
     
     @PostMapping("/upload")
-    public ResponseEntity<ShoppingList> uploadPDF(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<ShoppingList> uploadPDF(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "workspaceCode", required = false) String workspaceCode) {
         try {
-            ShoppingList shoppingList = shoppingListService.uploadAndProcessPDF(file);
+            ShoppingList shoppingList = shoppingListService.uploadAndProcessPDF(file, workspaceCode);
             return ResponseEntity.ok(shoppingList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -31,8 +33,9 @@ public class ShoppingListController {
     }
     
     @GetMapping("/lists")
-    public ResponseEntity<List<ShoppingList>> getAllLists() {
-        List<ShoppingList> lists = shoppingListService.getAllLists();
+    public ResponseEntity<List<ShoppingList>> getAllLists(
+            @RequestParam(value = "workspaceCode", required = false) String workspaceCode) {
+        List<ShoppingList> lists = shoppingListService.getAllLists(workspaceCode);
         return ResponseEntity.ok(lists);
     }
     
