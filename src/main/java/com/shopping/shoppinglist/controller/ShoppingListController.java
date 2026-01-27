@@ -88,6 +88,11 @@ public class ShoppingListController {
         return ResponseEntity.ok(stats);
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<String> health() {
+        return ResponseEntity.ok("OK");
+    }
+
     static class UpdateListNameRequest {
         private String name;
 
